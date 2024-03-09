@@ -1,0 +1,1427 @@
+================================================
+-----------------------------------------------
+User Guide
+https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html
+-----------------------------------------------
+================================================
+Section 1 - 10 minutes to pandas
+------------------------------------------
+#To use pandas library you must first import it.
+
+import pandas as pd
+
+==============================
+Basic data structures in pandas
+------------------------------
+1-Series: a one-dimensional labeled array holding data of any type
+such as integers, strings, Python objects etc.
+
+2-DataFrame: a two-dimensional data structure that holds data 
+like a two-dimension array or a table with rows and columns.
+==============================
+==============================
+Object creation
+------------------------------
+Creating a Series by passing a list of values, letting pandas create a default RangeIndex.
+
+In [3]: s = pd.Series([1, 3, 5, np.nan, 6, 8])
+
+In [4]: s
+Out[4]: 
+0    1.0
+1    3.0
+2    5.0
+3    NaN
+4    6.0
+5    8.0
+dtype: float64
+
+Creating a DataFrame by passing
+a NumPy array with a datetime index using date_range() and labeled columns:
+
+In [5]: dates = pd.date_range("20130101", periods=6)
+
+In [6]: dates
+Out[6]: 
+DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+               '2013-01-05', '2013-01-06'],
+              dtype='datetime64[ns]', freq='D')
+
+In [7]: df = pd.DataFrame(np.random.randn(6, 4), index=dates, columns=list("ABCD"))
+
+In [8]: df
+Out[8]: 
+                   A         B         C         D
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401
+2013-01-06 -0.673690  0.113648 -1.478427  0.524988
+
+Creating a DataFrame by passing a dictionary of objects 
+the keys == the column labels
+the values == column values.
+
+df2 = pd.DataFrame(
+    {
+        "A": 1.0,
+        "B": pd.Timestamp("20130102"),
+        "C": pd.Series(1, index=list(range(4)), dtype="float32"),
+        "D": np.array([3] * 4, dtype="int32"),
+        "E": pd.Categorical(["test", "train", "test", "train"]),
+        "F": "foo",
+    }
+)
+
+
+df2
+Out[10]: 
+     A          B    C  D      E    F
+0  1.0 2013-01-02  1.0  3   test  foo
+1  1.0 2013-01-02  1.0  3  train  foo
+2  1.0 2013-01-02  1.0  3   test  foo
+3  1.0 2013-01-02  1.0  3  train  foo
+
+
+The columns of the resulting DataFrame have different dtypes:
+In [11]: df2.dtypes
+Out[11]: 
+A          float64
+B    datetime64[s]
+C          float32
+D            int32
+E         category
+F           object
+dtype: object
+==============================
+==============================
+Viewing data
+------------------------------
+#head() =>Data rows from top.
+#tail() => Data rows from bottom.
+
+In [13]: df.head()
+Out[13]: 
+                   A         B         C         D
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401
+
+#the result by default it the top 5 rows.
+
+In [14]: df.tail(3)
+Out[14]: 
+                   A         B         C         D
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401
+2013-01-06 -0.673690  0.113648 -1.478427  0.524988
+
+#the result will be 3 of the bottom rows.
+---
+
+#Display the DataFrame.index or DataFrame.columns:
+In [15]: df.index
+Out[15]: 
+DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+               '2013-01-05', '2013-01-06'],
+              dtype='datetime64[ns]', freq='D')
+
+In [16]: df.columns
+Out[16]: Index(['A', 'B', 'C', 'D'], dtype='object')
+
+---
+
+DataFrame.to_numpy()
+#Converting to a numpy array.
+
+In [17]: df.to_numpy()
+Out[17]: 
+array([[ 0.4691, -0.2829, -1.5091, -1.1356],
+       [ 1.2121, -0.1732,  0.1192, -1.0442],
+       [-0.8618, -2.1046, -0.4949,  1.0718],
+       [ 0.7216, -0.7068, -1.0396,  0.2719],
+       [-0.425 ,  0.567 ,  0.2762, -1.0874],
+       [-0.6737,  0.1136, -1.4784,  0.525 ]])
+
+---
+Note :
+#Numpy arrays => have one dtype for the entire array.
+#Pandas DataFrames => have one dtype per column.
+
+#When calling df.to_numpy() pandas will find the numpy dtype
+that can hold all of the dtypes in the DataFrame [Commonly >> Data type is object]
+
+
+In [18]: df2.dtypes
+Out[18]: 
+A          float64
+B    datetime64[s]
+C          float32
+D            int32
+E         category
+F           object
+dtype: object
+
+In [19]: df2.to_numpy()
+Out[19]: 
+array([[1.0, Timestamp('2013-01-02 00:00:00'), 1.0, 3, 'test', 'foo'],
+       [1.0, Timestamp('2013-01-02 00:00:00'), 1.0, 3, 'train', 'foo'],
+       [1.0, Timestamp('2013-01-02 00:00:00'), 1.0, 3, 'test', 'foo'],
+       [1.0, Timestamp('2013-01-02 00:00:00'), 1.0, 3, 'train', 'foo']],
+      dtype=object)
+
+---
+
+#describe() shows some data 
+#some data :summary statistics and spread statistics
+#summary statistics : min , max , sum ,...
+#spread statistics  : std , var ,...
+
+In [20]: df.describe()
+Out[20]: 
+              A         B         C         D
+count  6.000000  6.000000  6.000000  6.000000
+mean   0.073711 -0.431125 -0.687758 -0.233103
+std    0.843157  0.922818  0.779887  0.973118
+min   -0.861849 -2.104569 -1.509059 -1.135632
+25%   -0.611510 -0.600794 -1.368714 -1.076610
+50%    0.022070 -0.228039 -0.767252 -0.386188
+75%    0.658444  0.041933 -0.034326  0.461706
+max    1.212112  0.567020  0.276232  1.071804
+
+---
+
+Transposing your data
+
+In [21]: df.T
+Out[21]: 
+   2013-01-01  2013-01-02  2013-01-03  2013-01-04  2013-01-05  2013-01-06
+A    0.469112    1.212112   -0.861849    0.721555   -0.424972   -0.673690
+B   -0.282863   -0.173215   -2.104569   -0.706771    0.567020    0.113648
+C   -1.509059    0.119209   -0.494929   -1.039575    0.276232   -1.478427
+D   -1.135632   -1.044236    1.071804    0.271860   -1.087401    0.524988
+
+---
+
+DataFrame.sort_index() sorts by an axis:
+
+In [22]: df.sort_index(axis=1, ascending=False)
+Out[22]: 
+                   D         C         B         A
+2013-01-01 -1.135632 -1.509059 -0.282863  0.469112
+2013-01-02 -1.044236  0.119209 -0.173215  1.212112
+2013-01-03  1.071804 -0.494929 -2.104569 -0.861849
+2013-01-04  0.271860 -1.039575 -0.706771  0.721555
+2013-01-05 -1.087401  0.276232  0.567020 -0.424972
+2013-01-06  0.524988 -1.478427  0.113648 -0.673690
+
+
+---
+DataFrame.sort_values() sorts by values:
+
+In [23]: df.sort_values(by="B")
+Out[23]: 
+                   A         B         C         D
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-06 -0.673690  0.113648 -1.478427  0.524988
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401
+
+==============================
+==============================
+Getitem ([])
+------------------------------
+#It called in numpy and python also Indexing.
+
+In [24]: df["A"]
+Out[24]: 
+2013-01-01    0.469112
+2013-01-02    1.212112
+2013-01-03   -0.861849
+2013-01-04    0.721555
+2013-01-05   -0.424972
+2013-01-06   -0.673690
+Freq: D, Name: A, dtype: float64
+
+---
+
+In [25]: df[0:3]
+Out[25]: 
+                   A         B         C         D
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+
+In [26]: df["20130102":"20130104"]
+Out[26]: 
+                   A         B         C         D
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+
+#Here we sliced the data.
+
+==============================
+==============================
+Selection by label
+------------------------------
+using DataFrame.loc() or DataFrame.at().
+
+In [27]: df.loc[dates[0]]
+Out[27]: 
+A    0.469112
+B   -0.282863
+C   -1.509059
+D   -1.135632
+Name: 2013-01-01 00:00:00, dtype: float64
+
+#loc is used for slicing.
+
+---
+
+Selecting all rows (:) with a select column labels:
+
+In [28]: df.loc[:, ["A", "B"]]
+Out[28]: 
+                   A         B
+2013-01-01  0.469112 -0.282863
+2013-01-02  1.212112 -0.173215
+2013-01-03 -0.861849 -2.104569
+2013-01-04  0.721555 -0.706771
+2013-01-05 -0.424972  0.567020
+2013-01-06 -0.673690  0.113648
+
+---
+For label slicing, both endpoints are included:
+
+In [29]: df.loc["20130102":"20130104", ["A", "B"]]
+Out[29]: 
+                   A         B
+2013-01-02  1.212112 -0.173215
+2013-01-03 -0.861849 -2.104569
+2013-01-04  0.721555 -0.706771
+---
+Selecting a single row and column label returns a scalar:
+In [30]: df.loc[dates[0], "A"]
+Out[30]: 0.4691122999071863
+---
+Fast access to a scalar
+
+#For getting fast access to a scalar (equivalent to the prior method):
+In [31]: df.at[dates[0], "A"]
+Out[31]: 0.4691122999071863
+
+==============================
+==============================
+Selection by position 
+------------------------------
+#i >> index
+DataFrame.iloc() or DataFrame.iat().
+
+In [32]: df.iloc[3]
+Out[32]: 
+A    0.721555
+B   -0.706771
+C   -1.039575
+D    0.271860
+Name: 2013-01-04 00:00:00, dtype: float64
+---
+
+In [33]: df.iloc[3:5, 0:2]
+Out[33]: 
+                   A         B
+2013-01-04  0.721555 -0.706771
+2013-01-05 -0.424972  0.567020
+--
+
+In [34]: df.iloc[[1, 2, 4], [0, 2]]
+Out[34]: 
+                   A         C
+2013-01-02  1.212112  0.119209
+2013-01-03 -0.861849 -0.494929
+2013-01-05 -0.424972  0.276232
+==============================
+==============================
+Basic data structures in pandas
+------------------------------
+#DataFrame.iloc() or DataFrame.iat().
+
+In [32]: df.iloc[3]
+Out[32]: 
+A    0.721555
+B   -0.706771
+C   -1.039575
+D    0.271860
+Name: 2013-01-04 00:00:00, dtype: float64
+
+---
+
+#Integer slices acts similar to NumPy/Python:
+In [33]: df.iloc[3:5, 0:2]
+Out[33]: 
+                   A         B
+2013-01-04  0.721555 -0.706771
+2013-01-05 -0.424972  0.567020
+
+---
+
+#Lists of integer position locations:
+In [34]: df.iloc[[1, 2, 4], [0, 2]]
+Out[34]: 
+                   A         C
+2013-01-02  1.212112  0.119209
+2013-01-03 -0.861849 -0.494929
+2013-01-05 -0.424972  0.276232
+
+---
+
+For slicing rows explicitly:
+
+In [35]: df.iloc[1:3, :]
+Out[35]: 
+                   A         B         C         D
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804
+
+---
+
+#For slicing columns explicitly:
+
+In [36]: df.iloc[:, 1:3]
+Out[36]: 
+                   B         C
+2013-01-01 -0.282863 -1.509059
+2013-01-02 -0.173215  0.119209
+2013-01-03 -2.104569 -0.494929
+2013-01-04 -0.706771 -1.039575
+2013-01-05  0.567020  0.276232
+2013-01-06  0.113648 -1.478427
+
+---
+
+#For getting a value explicitly:
+
+In [37]: df.iloc[1, 1]
+Out[37]: -0.17321464905330858
+
+---
+
+#For getting fast access to a scalar (equivalent to the prior method):
+
+In [38]: df.iat[1, 1]
+Out[38]: -0.17321464905330858
+
+==============================
+==============================
+Boolean indexing
+------------------------------
+
+#Select rows where df.A is greater than 0.
+
+In [39]: df[df["A"] > 0]
+Out[39]: 
+                   A         B         C         D
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860
+
+#Selecting values from a DataFrame where a boolean condition is met:
+
+In [40]: df[df > 0]
+Out[40]: 
+                   A         B         C         D
+2013-01-01  0.469112       NaN       NaN       NaN
+2013-01-02  1.212112       NaN  0.119209       NaN
+2013-01-03       NaN       NaN       NaN  1.071804
+2013-01-04  0.721555       NaN       NaN  0.271860
+2013-01-05       NaN  0.567020  0.276232       NaN
+2013-01-06       NaN  0.113648       NaN  0.524988
+
+---
+
+isin() method for filtering:
+
+In [41]: df2 = df.copy()
+
+In [42]: df2["E"] = ["one", "one", "two", "three", "four", "three"]
+
+In [43]: df2
+Out[43]: 
+                   A         B         C         D      E
+2013-01-01  0.469112 -0.282863 -1.509059 -1.135632    one
+2013-01-02  1.212112 -0.173215  0.119209 -1.044236    one
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804    two
+2013-01-04  0.721555 -0.706771 -1.039575  0.271860  three
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401   four
+2013-01-06 -0.673690  0.113648 -1.478427  0.524988  three
+
+In [44]: df2[df2["E"].isin(["two", "four"])]
+Out[44]: 
+                   A         B         C         D     E
+2013-01-03 -0.861849 -2.104569 -0.494929  1.071804   two
+2013-01-05 -0.424972  0.567020  0.276232 -1.087401  four
+
+==============================
+==============================
+Setting
+------------------------------
+
+#Setting a new column automatically aligns the data by the indexes:
+
+In [45]: s1 = pd.Series([1, 2, 3, 4, 5, 6], index=pd.date_range("20130102", periods=6))
+
+In [46]: s1
+Out[46]: 
+2013-01-02    1
+2013-01-03    2
+2013-01-04    3
+2013-01-05    4
+2013-01-06    5
+2013-01-07    6
+Freq: D, dtype: int64
+
+In [47]: df["F"] = s1
+
+---
+
+#Setting values by label:
+
+In [48]: df.at[dates[0], "A"] = 0
+
+---
+
+#Setting values by position:
+In [49]: df.iat[0, 1] = 0
+
+---
+
+#Setting by assigning with a NumPy array:
+df.loc[:, "D"] = np.array([5] * len(df))
+
+#The result of the prior setting operations:
+In [51]: df
+Out[51]: 
+                   A         B         C    D    F
+2013-01-01  0.000000  0.000000 -1.509059  5.0  NaN
+2013-01-02  1.212112 -0.173215  0.119209  5.0  1.0
+2013-01-03 -0.861849 -2.104569 -0.494929  5.0  2.0
+2013-01-04  0.721555 -0.706771 -1.039575  5.0  3.0
+2013-01-05 -0.424972  0.567020  0.276232  5.0  4.0
+2013-01-06 -0.673690  0.113648 -1.478427  5.0  5.0
+
+---
+
+#A where operation with setting:
+
+In [52]: df2 = df.copy()
+
+In [53]: df2[df2 > 0] = -df2
+
+In [54]: df2
+Out[54]: 
+                   A         B         C    D    F
+2013-01-01  0.000000  0.000000 -1.509059 -5.0  NaN
+2013-01-02 -1.212112 -0.173215 -0.119209 -5.0 -1.0
+2013-01-03 -0.861849 -2.104569 -0.494929 -5.0 -2.0
+2013-01-04 -0.721555 -0.706771 -1.039575 -5.0 -3.0
+2013-01-05 -0.424972 -0.567020 -0.276232 -5.0 -4.0
+2013-01-06 -0.673690 -0.113648 -1.478427 -5.0 -5.0
+
+---
+
+
+
+
+==============================
+==============================
+Missing data
+------------------------------
+#np.nan >> represents missing data
+#by default >> not included in computations
+
+#Reindexing allows you to change/add/delete the
+index on a specified axis. This returns a copy of the data:
+
+In [55]: df1 = df.reindex(index=dates[0:4], columns=list(df.columns) + ["E"])
+
+In [56]: df1.loc[dates[0] : dates[1], "E"] = 1
+
+In [57]: df1
+Out[57]: 
+                   A         B         C    D    F    E
+2013-01-01  0.000000  0.000000 -1.509059  5.0  NaN  1.0
+2013-01-02  1.212112 -0.173215  0.119209  5.0  1.0  1.0
+2013-01-03 -0.861849 -2.104569 -0.494929  5.0  2.0  NaN
+2013-01-04  0.721555 -0.706771 -1.039575  5.0  3.0  NaN
+
+---
+
+#DataFrame.dropna() drops any rows that have missing data:
+
+In [58]: df1.dropna(how="any")
+Out[58]: 
+                   A         B         C    D    F    E
+2013-01-02  1.212112 -0.173215  0.119209  5.0  1.0  1.0
+
+---
+
+#DataFrame.fillna() fills missing data:
+
+In [59]: df1.fillna(value=5)
+Out[59]: 
+                   A         B         C    D    F    E
+2013-01-01  0.000000  0.000000 -1.509059  5.0  5.0  1.0
+2013-01-02  1.212112 -0.173215  0.119209  5.0  1.0  1.0
+2013-01-03 -0.861849 -2.104569 -0.494929  5.0  2.0  5.0
+2013-01-04  0.721555 -0.706771 -1.039575  5.0  3.0  5.0
+
+---
+
+#isna() gets the boolean mask where values are nan:
+#isna() >> "isNaN"
+
+In [60]: pd.isna(df1)
+Out[60]: 
+                A      B      C      D      F      E
+2013-01-01  False  False  False  False   True  False
+2013-01-02  False  False  False  False  False  False
+2013-01-03  False  False  False  False  False   True
+2013-01-04  False  False  False  False  False   True
+
+
+
+==============================
+==============================
+Stats
+------------------------------
+
+#Operations in general exclude missing data.
+
+#Calculate the mean value for each column:
+
+In [61]: df.mean()
+Out[61]: 
+A   -0.004474
+B   -0.383981
+C   -0.687758
+D    5.000000
+F    3.000000
+dtype: float64
+
+---
+
+#Calculate the mean value for each row:
+
+In [62]: df.mean(axis=1)
+Out[62]: 
+2013-01-01    0.872735
+2013-01-02    1.431621
+2013-01-03    0.707731
+2013-01-04    1.395042
+2013-01-05    1.883656
+2013-01-06    1.592306
+Freq: D, dtype: float64
+
+---
+
+==============================
+==============================
+User defined functions
+------------------------------
+
+#DataFrame.agg() and DataFrame.transform()
+applies a user defined function that reduces or broadcasts its result respectively.
+
+In [66]: df.agg(lambda x: np.mean(x) * 5.6)
+Out[66]: 
+A    -0.025054
+B    -2.150294
+C    -3.851445
+D    28.000000
+F    16.800000
+dtype: float64
+
+In [67]: df.transform(lambda x: x * 101.2)
+Out[67]: 
+                     A           B           C      D      F
+2013-01-01    0.000000    0.000000 -152.716721  506.0    NaN
+2013-01-02  122.665737  -17.529322   12.063922  506.0  101.2
+2013-01-03  -87.219115 -212.982405  -50.086843  506.0  202.4
+2013-01-04   73.021382  -71.525239 -105.204988  506.0  303.6
+2013-01-05  -43.007200   57.382459   27.954680  506.0  404.8
+2013-01-06  -68.177398   11.501219 -149.616767  506.0  506.0
+
+---
+
+==============================
+==============================
+Value Counts
+------------------------------
+
+
+In [68]: s = pd.Series(np.random.randint(0, 7, size=10))
+
+In [69]: s
+Out[69]: 
+0    4
+1    2
+2    1
+3    2
+4    6
+5    4
+6    4
+7    6
+8    4
+9    4
+dtype: int64
+
+In [70]: s.value_counts()
+Out[70]: 
+4    5
+2    2
+6    2
+1    1
+Name: count, dtype: int64
+
+
+==============================
+
+==============================
+==============================
+String Methods
+------------------------------
+
+#Series is equipped with a set of string processing methods
+in the str attribute that make it easy to operate on each element
+Of the array, as in the code snippet below. See more at Vectorized String Methods.
+
+In [71]: s = pd.Series(["A", "B", "C", "Aaba", "Baca", np.nan, "CABA", "dog", "cat"])
+
+In [72]: s.str.lower()
+Out[72]: 
+0       a
+1       b
+2       c
+3    aaba
+4    baca
+5     NaN
+6    caba
+7     dog
+8     cat
+dtype: object
+
+
+---
+
+==============================
+
+==============================
+==============================
+Concat
+------------------------------
+
+#Concatenating pandas objects together row-wise with concat():
+
+In [73]: df = pd.DataFrame(np.random.randn(10, 4))
+
+In [74]: df
+Out[74]: 
+          0         1         2         3
+0 -0.548702  1.467327 -1.015962 -0.483075
+1  1.637550 -1.217659 -0.291519 -1.745505
+2 -0.263952  0.991460 -0.919069  0.266046
+3 -0.709661  1.669052  1.037882 -1.705775
+4 -0.919854 -0.042379  1.247642 -0.009920
+5  0.290213  0.495767  0.362949  1.548106
+6 -1.131345 -0.089329  0.337863 -0.945867
+7 -0.932132  1.956030  0.017587 -0.016692
+8 -0.575247  0.254161 -1.143704  0.215897
+9  1.193555 -0.077118 -0.408530 -0.862495
+
+# break it into pieces
+In [75]: pieces = [df[:3], df[3:7], df[7:]]
+
+In [76]: pd.concat(pieces)
+Out[76]: 
+          0         1         2         3
+0 -0.548702  1.467327 -1.015962 -0.483075
+1  1.637550 -1.217659 -0.291519 -1.745505
+2 -0.263952  0.991460 -0.919069  0.266046
+3 -0.709661  1.669052  1.037882 -1.705775
+4 -0.919854 -0.042379  1.247642 -0.009920
+5  0.290213  0.495767  0.362949  1.548106
+6 -1.131345 -0.089329  0.337863 -0.945867
+7 -0.932132  1.956030  0.017587 -0.016692
+8 -0.575247  0.254161 -1.143704  0.215897
+9  1.193555 -0.077118 -0.408530 -0.862495
+
+##note: 
+Adding column :fast
+Adding row : expensive
+
+==============================
+
+==============================
+==============================
+Join
+------------------------------
+
+#merge() enables SQL style join types along specific columns.
+
+In [77]: left = pd.DataFrame({"key": ["foo", "foo"], "lval": [1, 2]})
+
+In [78]: right = pd.DataFrame({"key": ["foo", "foo"], "rval": [4, 5]})
+
+In [79]: left
+Out[79]: 
+   key  lval
+0  foo     1
+1  foo     2
+
+In [80]: right
+Out[80]: 
+   key  rval
+0  foo     4
+1  foo     5
+
+In [81]: pd.merge(left, right, on="key")
+Out[81]: 
+   key  lval  rval
+0  foo     1     4
+1  foo     1     5
+2  foo     2     4
+3  foo     2     5
+
+---
+
+#merge() on unique keys:
+
+In [82]: left = pd.DataFrame({"key": ["foo", "bar"], "lval": [1, 2]})
+
+In [83]: right = pd.DataFrame({"key": ["foo", "bar"], "rval": [4, 5]})
+
+In [84]: left
+Out[84]: 
+   key  lval
+0  foo     1
+1  bar     2
+
+In [85]: right
+Out[85]: 
+   key  rval
+0  foo     4
+1  bar     5
+
+In [86]: pd.merge(left, right, on="key")
+Out[86]: 
+   key  lval  rval
+0  foo     1     4
+1  bar     2     5
+
+---
+
+#
+
+
+---
+
+
+==============================
+==============================
+==============================
+Grouping 
+------------------------------
+
+#split the data into groups to identify each individual property or column.
+
+---
+
+#Splitting the data into groups based on some criteria
+
+#Applying a function to each group independently
+
+#Combining the results into a data structure
+
+
+---
+In [87]: df = pd.DataFrame(
+   ....:     {
+   ....:         "A": ["foo", "bar", "foo", "bar", "foo", "bar", "foo", "foo"],
+   ....:         "B": ["one", "one", "two", "three", "two", "two", "one", "three"],
+   ....:         "C": np.random.randn(8),
+   ....:         "D": np.random.randn(8),
+   ....:     }
+   ....: )
+   ....: 
+
+In [88]: df
+Out[88]: 
+     A      B         C         D
+0  foo    one  1.346061 -1.577585
+1  bar    one  1.511763  0.396823
+2  foo    two  1.627081 -0.105381
+3  bar  three -0.990582 -0.532532
+4  foo    two -0.441652  1.453749
+5  bar    two  1.211526  1.208843
+6  foo    one  0.268520 -0.080952
+7  foo  three  0.024580 -0.264610
+
+
+---
+
+In [89]: df.groupby("A")[["C", "D"]].sum()
+Out[89]: 
+            C         D
+A                      
+bar  1.732707  1.073134
+foo  2.824590 -0.574779
+
+---
+
+In [90]: df.groupby(["A", "B"]).sum()
+Out[90]: 
+                  C         D
+A   B                        
+bar one    1.511763  0.396823
+    three -0.990582 -0.532532
+    two    1.211526  1.208843
+foo one    1.614581 -1.658537
+    three  0.024580 -0.264610
+    two    1.185429  1.348368
+---
+
+
+
+==============================
+==============================
+==============================
+Reshaping
+------------------------------
+
+In [91]: arrays = [
+   ....:    ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+   ....:    ["one", "two", "one", "two", "one", "two", "one", "two"],
+   ....: ]
+   ....: 
+
+In [92]: index = pd.MultiIndex.from_arrays(arrays, names=["first", "second"])
+
+In [93]: df = pd.DataFrame(np.random.randn(8, 2), index=index, columns=["A", "B"])
+
+In [94]: df2 = df[:4]
+
+In [95]: df2
+Out[95]: 
+                     A         B
+first second                    
+bar   one    -0.727965 -0.589346
+      two     0.339969 -0.693205
+baz   one    -0.339355  0.593616
+      two     0.884345  1.591431
+
+==============================
+==============================
+==============================
+Pivot tables
+------------------------------
+
+In [101]: df = pd.DataFrame(
+   .....:     {
+   .....:         "A": ["one", "one", "two", "three"] * 3,
+   .....:         "B": ["A", "B", "C"] * 4,
+   .....:         "C": ["foo", "foo", "foo", "bar", "bar", "bar"] * 2,
+   .....:         "D": np.random.randn(12),
+   .....:         "E": np.random.randn(12),
+   .....:     }
+   .....: )
+   .....: 
+
+In [102]: df
+Out[102]: 
+        A  B    C         D         E
+0     one  A  foo -1.202872  0.047609
+1     one  B  foo -1.814470 -0.136473
+2     two  C  foo  1.018601 -0.561757
+3   three  A  bar -0.595447 -1.623033
+4     one  B  bar  1.395433  0.029399
+5     one  C  bar -0.392670 -0.542108
+6     two  A  foo  0.007207  0.282696
+7   three  B  foo  1.928123 -0.087302
+8     one  C  foo -0.055224 -1.575170
+9     one  A  bar  2.395985  1.771208
+10    two  B  bar  1.552825  0.816482
+11  three  C  bar  0.166599  1.100230
+
+---
+In [103]: pd.pivot_table(df, values="D", index=["A", "B"], columns=["C"])
+Out[103]: 
+C             bar       foo
+A     B                    
+one   A  2.395985 -1.202872
+      B  1.395433 -1.814470
+      C -0.392670 -0.055224
+three A -0.595447       NaN
+      B       NaN  1.928123
+      C  0.166599       NaN
+two   A       NaN  0.007207
+      B  1.552825       NaN
+      C       NaN  1.018601
+
+---
+==============================
+==============================
+Time series
+------------------------------
+In [104]: rng = pd.date_range("1/1/2012", periods=100, freq="s")
+
+In [105]: ts = pd.Series(np.random.randint(0, 500, len(rng)), index=rng)
+
+In [106]: ts.resample("5Min").sum()
+Out[106]: 
+2012-01-01    24182
+Freq: 5min, dtype: int64
+
+---
+Series.tz_localize() localizes a time series to a time zone:
+
+In [107]: rng = pd.date_range("3/6/2012 00:00", periods=5, freq="D")
+
+In [108]: ts = pd.Series(np.random.randn(len(rng)), rng)
+
+In [109]: ts
+Out[109]: 
+2012-03-06    1.857704
+2012-03-07   -1.193545
+2012-03-08    0.677510
+2012-03-09   -0.153931
+2012-03-10    0.520091
+Freq: D, dtype: float64
+
+In [110]: ts_utc = ts.tz_localize("UTC")
+
+In [111]: ts_utc
+Out[111]: 
+2012-03-06 00:00:00+00:00    1.857704
+2012-03-07 00:00:00+00:00   -1.193545
+2012-03-08 00:00:00+00:00    0.677510
+2012-03-09 00:00:00+00:00   -0.153931
+2012-03-10 00:00:00+00:00    0.520091
+Freq: D, dtype: float64
+
+---
+Series.tz_convert() converts a timezones aware time series to another time zone:
+In [112]: ts_utc.tz_convert("US/Eastern")
+Out[112]: 
+2012-03-05 19:00:00-05:00    1.857704
+2012-03-06 19:00:00-05:00   -1.193545
+2012-03-07 19:00:00-05:00    0.677510
+2012-03-08 19:00:00-05:00   -0.153931
+2012-03-09 19:00:00-05:00    0.520091
+Freq: D, dtype: float64
+==============================
+==============================
+Excel
+------------------------------
+
+DataFrame.to_excel():
+In [139]: df.to_excel("foo.xlsx", sheet_name="Sheet1")
+In [140]: pd.read_excel("foo.xlsx", "Sheet1", index_col=None, na_values=["NA"])
+Out[140]: 
+   Unnamed: 0  0  1  2  3  4
+0           0  4  3  1  1  2
+1           1  1  0  2  3  2
+2           2  1  4  2  1  2
+3           3  0  4  0  2  2
+4           4  4  2  2  3  4
+5           5  4  0  4  3  1
+6           6  2  1  2  0  3
+7           7  4  0  4  4  4
+8           8  4  4  1  0  1
+9           9  0  4  3  0  3
+
+==============================
+==============================
+
+
+
+
+==============================
+==============================
+50 Pandas function with explanation and categorized
+---------
+Data Manipulation:
+
+head(): Returns the first n rows of a DataFrame.
+tail(): Returns the last n rows of a DataFrame.
+info(): Provides a concise summary of a DataFrame, including column names, data types, and non-null counts.
+describe(): Generates descriptive statistics of numerical columns in a DataFrame.
+drop(): Removes specified rows or columns from a DataFrame.
+drop_duplicates(): Removes duplicate rows from a DataFrame.
+fillna(): Fills missing values in a DataFrame with specified values or methods.
+replace(): Replaces specified values in a DataFrame with other values.
+rename(): Changes the column or index names of a DataFrame.
+sort_values(): Sorts a DataFrame by one or more columns.
+groupby(): Groups a DataFrame by one or more columns for further aggregation or analysis.
+pivot_table(): Creates a spreadsheet-style pivot table based on a DataFrame.
+melt(): Unpivots a DataFrame from wide to long format.
+Data Selection:
+14. loc[]: Accesses a group of rows and columns in a DataFrame by label or boolean indexing.
+15. iloc[]: Accesses a group of rows and columns in a DataFrame by integer indexing.
+16. at[]: Accesses a single value in a DataFrame by label.
+17. iat[]: Accesses a single value in a DataFrame by integer index.
+18. isin(): Checks whether values are contained in a DataFrame.
+19. query(): Filters a DataFrame based on a specified condition.
+20. sample(): Returns a random sample of items from a DataFrame.
+
+Data Aggregation:
+21. mean(): Computes the mean of values in a DataFrame.
+22. sum(): Computes the sum of values in a DataFrame.
+23. min(): Returns the minimum value in a DataFrame.
+24. max(): Returns the maximum value in a DataFrame.
+25. count(): Counts non-null values in each column of a DataFrame.
+26. nunique(): Returns the number of unique values in each column of a DataFrame.
+27. value_counts(): Computes the frequency counts of unique values in a DataFrame.
+28. agg(): Applies one or more aggregation functions to columns in a DataFrame.
+29. transform(): Applies a function to a group of rows or columns in a DataFrame.
+
+Data Cleaning and Formatting:
+30. astype(): Converts the data type of a column in a DataFrame.
+31. str.lower(): Converts string values in a column to lowercase.
+32. str.upper(): Converts string values in a column to uppercase.
+33. str.strip(): Removes leading and trailing whitespace from string values in a column.
+34. str.replace(): Replaces specified substrings in string values of a column.
+35. dt.strftime(): Formats datetime values in a column as strings.
+36. to_datetime(): Converts a column to datetime format.
+
+Data Handling:
+37. concat(): Concatenates multiple DataFrames along a specified axis.
+38. merge(): Merges two DataFrames based on a common column or index.
+39. join(): Joins two DataFrames on their indexes.
+40. pivot(): Reshapes a DataFrame from long to wide format.
+41. stack(): Moves data from columns to rows (creates a multi-level index).
+42. unstack(): Moves data from rows to columns (unstacks a multi-level index).
+
+Data Visualization:
+43. plot(): Creates various types of plots (line, bar, scatter, etc.) using Matplotlib.
+44. hist(): Plots a histogram of values in a DataFrame.
+45. boxplot(): Creates a box-and-whisker plot of values in a DataFrame.
+46. heatmap(): Plots a heatmap of a correlation matrix.
+47. scatter(): Creates a scatter plot of two columns in a DataFrame.
+
+Data I/O:
+48. read_csv(): Reads a CSV file into a DataFrame.
+49. to_csv(): Writes a DataFrame to a CSV file.
+50. read_excel(): Reads an Excel file into a DataFrame.
+
+
+==============================
+==============================
+functions with parameters explained:
+--------
+head(n=5)
+
+n: Number of rows to return from the beginning of the DataFrame.
+tail(n=5)
+
+n: Number of rows to return from the end of the DataFrame.
+info(verbose=True, null_counts=False)
+
+verbose: Controls the amount of information displayed in the summary. If True, includes detailed information about each column.
+null_counts: Specifies whether to include the count of non-null values for each column.
+describe(percentiles=None, include=None, exclude=None)
+
+percentiles: List of percentiles to include in the descriptive statistics.
+include: Data types to include in the summary statistics.
+exclude: Data types to exclude from the summary statistics.
+drop(labels=None, axis=0, index=None, columns=None)
+
+labels: Labels or index/column names to drop from the DataFrame.
+axis: Specifies whether to drop rows (axis=0) or columns (axis=1).
+index: Index labels to drop from the DataFrame.
+columns: Column names to drop from the DataFrame.
+drop_duplicates(subset=None, keep='first', inplace=False, ignore_index=False)
+
+subset: Columns to consider for identifying duplicate rows.
+keep: Specifies which duplicate rows to keep. Options are 'first', 'last', or False.
+inplace: Specifies whether to modify the DataFrame in place.
+ignore_index: Specifies whether to reset the index after dropping duplicates.
+fillna(value=None, method=None, axis=None, inplace=False, limit=None)
+
+value: Value or dictionary of values to use for filling missing values.
+method: Interpolation method to use for filling missing values.
+axis: Specifies whether to fill missing values along rows (axis=0) or columns (axis=1).
+inplace: Specifies whether to fill missing values in place.
+limit: Maximum number of consecutive missing values to fill.
+replace(to_replace=None, value=None, inplace=False, limit=None)
+
+to_replace: Value, list, or dictionary of values to replace.
+value: Value or list of values to replace with.
+inplace: Specifies whether to replace values in place.
+limit: Maximum number of replacements to make.
+rename(mapper=None, index=None, columns=None, axis=None, inplace=False)
+
+mapper: Dictionary-like object or mapping function to rename axis labels.
+index: Dictionary-like object or mapping function to rename index labels.
+columns: Dictionary-like object or mapping function to rename column labels.
+axis: Specifies whether to rename index labels (axis=0) or column labels (axis=1).
+inplace: Specifies whether to rename labels in place.
+sort_values(by=None, axis=0, ascending=True, inplace=False, ignore_index=False, na_position='last')
+
+by: Column name or list of column names to sort the DataFrame by.
+axis: Specifies whether to sort by rows (axis=0) or columns (axis=1).
+ascending: Specifies whether to sort in ascending (True) or descending (False) order.
+inplace: Specifies whether to sort the DataFrame in place.
+ignore_index: Specifies whether to reset the index after sorting.
+na_position: Specifies the position of NaN values in the sort order.
+groupby(by=None, axis=0, level=None, as_index=True, sort=True, group_keys=True, squeeze=False, observed=False)
+
+by: Column name, list of column names, or other keys to group by.
+axis: Specifies whether to group by rows (axis=0) or columns (axis=1).
+level: If the axis is a MultiIndex, specifies the level(s) to group by.
+as_index: Specifies whether to return the grouped columns as the index (True) or as regular columns (False).
+sort: Specifies whether to sort the resulting groups by the group keys.
+group_keys: Specifies whether to show the group keys in the result.
+squeeze: Specifies whether to return a Series (True) or DataFrame (False) when there is only one group.
+observed: Specifies whether to only show observed values for categorical groupers.
+pivot_table(values=None, index=None, columns=None, aggfunc='mean', fill_value=None, margins=False, dropna=True, margins_name='All', observed=False)
+
+values: Column name or list of column names to aggregate.
+index: Column name or list of column names to use as the row index in the pivot table.
+columns: Column name or list of column names to use as the column index in the pivot table.
+aggfunc: Aggregation function(s) to apply to the values.
+fill_value: Value to replace missing values with.
+margins: Specifies whether to include row/column totals in the pivot table.
+dropna: Specifies whether to exclude rows/columns with missing values.
+margins_name: Name of the row/column that contains the totals.
+observed: Specifies whether to only show observed values for categorical groupers.
+melt(id_vars=None, value_vars=None, var_name='variable', value_name='value', col_level=None)
+
+id_vars: Column name(s) to use as identifier variables.
+value_vars: Column name(s) to unpivot. If not specified, all columns not in id_vars will be used.
+var_name: Name to use for the 'variable' column.
+value_name: Name to use for the 'value' column.
+col_level: If columns are a MultiIndex, specifies the level(s) to melt.
+loc[row_indexer, column_indexer]
+
+row_indexer: Label or boolean array-like object to select rows based on labels or conditions.
+column_indexer: Label or boolean array-like object to select columns based on labels or conditions.
+iloc[row_indexer, column_indexer]
+
+row_indexer: Integer array-like object to select rows based on integer positions.
+column_indexer: Integer array-like object to select columns based on integer positions.
+at[row_index, column_index]
+
+row_index: Label of the row to select.
+column_index: Label of the column to select.
+iat[row_index, column_index]
+
+row_index: Integer position of the row to select.
+column_index: Integer position of the column to select.
+isin(values)
+
+values: Single value or array-like object containing the values to check for.
+query(expr)
+
+expr: Boolean expression or a string representing a boolean expression to filter the DataFrame.
+sample(n=None, frac=None, replace=False, weights=None, random_state=None, axis=None)
+
+n: Number of items to sample from the DataFrame.
+frac: Fraction of items to sample from the DataFrame.
+replace: Specifies whether to sample with replacement.
+weights: Array-like object of weights associated with the items in the DataFrame.
+random_state: Seed value for random number generation.
+axis: Specifies whether to sample rows (axis=0) or columns (axis=1).
+mean(axis=None, skipna=None, level=None, numeric_only=None, **kwargs)
+
+axis: Specifies whether to compute the mean along rows (axis=0) or columns (axis=1).
+skipna: Specifies whether to exclude NaN values from the calculation.
+level: If the axis is a MultiIndex, specifies the level(s) to compute the mean.
+numeric_only: Specifies whether to include only numeric columns in the calculation.
+sum(axis=None, skipna=None, level=None, numeric_only=None, min_count=0, **kwargs)
+
+axis: Specifies whether to compute the sum along rows (axis=0) or columns (axis=1).
+skipna: Specifies whether to exclude NaN values from the calculation.
+level: If the axis is a MultiIndex, specifies the level(s) to compute the sum.
+numeric_only: Specifies whether to include only numeric columns in the calculation.
+min_count: Minimum number of non-null values required to perform the sum.
+min(axis=None, skipna=None, level=None, numeric_only=None, **kwargs)
+
+axis: Specifies whether to compute the minimum along rows (axis=0) or columns (axis=1).
+skipna: Specifies whether to exclude NaN values from the calculation.
+level: If the axis is a MultiIndex, specifies the level(s) to compute the minimum.
+numeric_only: Specifies whether to include only numeric columns in the calculation.
+max(axis=None, skipna=None, level=None, numeric_only=None, **kwargs)
+
+axis: Specifies whether to compute the maximum along rows (axis=0) or columns (axis=1).
+skipna: Specifies whether to exclude NaN values from the calculation.
+level: If the axis is a MultiIndex, specifies the level(s) to compute the maximum.
+numeric_only: Specifies whether to include only numeric columns in the calculation.
+count(axis=0, level=None, numeric_only=False)
+
+axis: Specifies whether to count along rows (axis=0) or columns (axis=1).
+level: If the axis is a MultiIndex, specifies the level(s) to count.
+numeric_only: Specifies whether to include only numeric columns in the count.
+nunique(axis=0, dropna=True)
+
+axis: Specifies whether to compute the number of unique values along rows (axis=0) or columns (axis=1).
+dropna: Specifies whether to exclude NaN values from the calculation.
+value_counts(subset=None, normalize=False, sort=True, ascending=False)
+
+subset: Column name or list of column names to compute value counts for.
+normalize: Specifies whether to return the relative frequencies of the unique values.
+sort: Specifies whether to sort the result by counts.
+ascending: Specifies whether to sort in ascending (True) or descending (False) order.
+agg(func, axis=0, *args, **kwargs)
+
+func: Aggregation function or list of aggregation functions to apply.
+axis: Specifies whether to apply the aggregation along rows (axis=0) or columns (axis=1).
+
+
+apply(func, axis=0, raw=False, result_type=None, args=(), **kwds)
+
+func: Function to apply to each column or row.
+axis: Specifies whether to apply the function along rows (axis=0) or columns (axis=1).
+raw: Specifies whether to pass each row or column as a Series to the function (True) or as an ndarray (False).
+result_type: Specifies the type of the resulting DataFrame.
+args: Additional positional arguments to pass to the function.
+kwds: Additional keyword arguments to pass to the function.
+transform(func, axis=0, *args, **kwargs)
+
+func: Function to apply to each column or row.
+axis: Specifies whether to apply the function along rows (axis=0) or columns (axis=1).
+args: Additional positional arguments to pass to the function.
+kwargs: Additional keyword arguments to pass to the function.
+map(arg, na_action=None)
+
+arg: Function, dict, or Series to apply element-wise.
+na_action: Specifies how to handle missing values. Options are 'ignore', 'raise', or None.
+astype(dtype, copy=True, errors='raise')
+
+dtype: Data type or dict of column names and data types to convert to.
+copy: Specifies whether to return a new DataFrame with the converted data (True) or modify the existing DataFrame in place (False).
+errors: Specifies how to handle errors during the conversion. Options are 'raise', 'ignore', or 'coerce'.
+dt accessor
+
+Allows access to datetime properties and methods of a Series or DataFrame column containing datetime values.
+str accessor
+
+Allows access to string methods for Series or DataFrame columns containing string values.
+plot accessor
+
+Provides access to plotting methods for Series or DataFrame objects.
+corr(method='pearson', min_periods=1)
+
+method: Correlation method to use. Options are 'pearson', 'kendall', or 'spearman'.
+min_periods: Minimum number of observations required to have a valid result.
+cov(min_periods=None)
+
+min_periods: Minimum number of observations required to have a valid result.
+pivot(index=None, columns=None, values=None)
+
+index: Column name(s) or other keys to use as the row index in the pivot table.
+columns: Column name(s) or other keys to use as the column index in the pivot table.
+values: Column name(s) or other keys to use as the values in the pivot table.
+to_csv(path_or_buf=None, sep=',', na_rep='', float_format=None, columns=None, header=True, index=True, index_label=None, mode='w', encoding=None, compression='infer', quoting=None, quotechar='"', line_terminator=None, chunksize=None, date_format=None, doublequote=True, escapechar=None, decimal='.')
+
+path_or_buf: File path or buffer to write the CSV data to.
+sep: Field delimiter.
+na_rep: String representation of missing values.
+float_format: Format string for floating-point numbers.
+columns: Column names to include in the CSV output.
+header: Specifies whether to include the column names in the CSV output.
+index: Specifies whether to include the index in the CSV output.
+index_label: Column label for the index.
+mode: File mode ('w' for write, 'a' for append, 'x' for exclusive creation).
+encoding: Encoding to use for the output file.
+compression: Compression algorithm to use.
+quoting: Quoting style for fields.
+quotechar: Character used to quote fields containing special characters.
+line_terminator: String used to terminate lines.
+chunksize: Number of rows to write at a time.
+date_format: Format string for datetime objects.
+doublequote: Specifies whether to double-quote fields containing special characters.
+escapechar: Character used to escape the quotechar.
+decimal: Character recognized as the decimal separator.
+to_excel(excel_writer, sheet_name='Sheet1', na_rep='', float_format=None, columns=None, header=True, index=True, index_label=None, startrow=0, startcol=0, engine=None, merge_cells=True, encoding=None, inf_rep='inf', verbose=True, freeze_panes=None)
+
+excel_writer: File path or existing ExcelWriter object to write the Excel data to.
+
+sheet_name: Name of the sheet to write to or an ExcelWriter object.
+
+na_rep: String representation of missing values.
+
+float_format: Format string for floating-point numbers.
+
+columns: Column names to include in the Excel output.
+
+header: Specifies whether to include the column names in the Excel output.
+
+index: Specifies whether to include the index in the Excel output.
+
+index_label: Column label for the index.
+
+startrow: Upper left cell row to dump data frame.
+
+startcol: Upper left cell column to dump data frame.
+
+engine(to_excel continued):
+
+engine: Name of the engine to use for writing the file. Options are 'openpyxl', 'xlsxwriter', or 'xlwt'.
+
+merge_cells: Specifies whether to merge cells when writing the output.
+
+encoding: Encoding to use for the output file.
+
+inf_rep: String representation of infinite values.
+
+verbose: Specifies whether to display a progress bar while saving.
+
+freeze_panes: Specifies the number of rows and columns to freeze in the Excel output.
+
+to_json(path_or_buf=None, orient=None, date_format=None, double_precision=10, force_ascii=True, date_unit='ms', default_handler=None, lines=False, compression='infer', index=True)
+
+path_or_buf: File path or buffer to write the JSON data to.
+orient: Orientation of the JSON output. Options are 'split', 'records', 'index', 'columns', or 'values'.
+date_format: Format string for datetime objects.
+double_precision: Number of decimal places to preserve for floating-point numbers.
+force_ascii: Specifies whether to escape non-ASCII characters.
+date_unit: Unit to use for date conversion. Options are 'ms' (milliseconds) or 's' (seconds).
+default_handler: Handler to use when encountering an unsupported type.
+lines: Specifies whether to write each row of the DataFrame as a separate line in the JSON output.
+compression: Compression algorithm to use.
+index: Specifies whether to include the index in the JSON output.
+to_parquet(path, engine='auto', compression='snappy', index=None, partition_cols=None)
+
+path: File path or file-like object to write the Parquet data to.
+engine: Parquet library to use. Options are 'auto', 'pyarrow', or 'fastparquet'.
+compression: Compression algorithm to use.
+index: Specifies whether to include the index in the Parquet output.
+partition_cols: Column names to use for partitioning the data.
+to_pickle(path, compression='infer', protocol=pkl.HIGHEST_PROTOCOL)
+
+path: File path or file-like object to write the pickled data to.
+compression: Compression algorithm to use.
+protocol: Pickle protocol version to use.
+to_feather(path)
+
+path: File path or file-like object to write the Feather data to.
+to_hdf(path_or_buf, key, mode='a', complevel=None, complib=None, append=False, index=True, min_itemsize=None, nan_rep=None, dropna=None, data_columns=None)
+
+path_or_buf: File path or buffer to write the HDF5 data to.
+key: Identifier for the HDF5 group or table.
+mode: File mode ('a' for append, 'w' for write).
+complevel: Compression level to use.
+complib: Compression library to use.
+append: Specifies whether to append to an existing HDF5 file.
+index: Specifies whether to include the index in the HDF5 output.
+min_itemsize: Minimum size of strings stored in the HDF5 file.
+nan_rep: String representation of missing values.
+dropna: Specifies whether to drop missing values.
+data_columns: Column names to store as data columns in the HDF5 file.
+
+
