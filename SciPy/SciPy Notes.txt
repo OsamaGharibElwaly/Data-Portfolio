@@ -1,1 +1,516 @@
-Will be added in the future.
+===============================================
+-----------------------------------------
+Scipy Library
+https://docs.scipy.org/doc/scipy-1.8.0/tutorial/stats.html
+
+#Some notes are my notes.
+#Some examples are my examples.
+#Will be Updated in the future.
+#We here cover the uses of Scipy in general and concentrate on statistics.
+-----------------------------------------
+===============================================
+
+
+===============================================
+-----------------------------------------
+Introduction
+-----------------------------------------
+#Scipy is a statistics and some math functions python library.
+#To use it you must import scipy first
+
+import scipy as sci
+
+===============================================
+
+===============================================
+-----------------------------------------
+Uses
+-----------------------------------------
+The SciPy library is a powerful tool for scientific and technical computing in Python. It provides a wide range of modules and functions that cover various areas of scientific computing. Here are some common uses of SciPy:
+
+Numerical Integration: SciPy's integrate module offers functions for numerical integration, including methods like quad for single integrals, dblquad for double integrals, and nquad for multiple integrals.
+
+Optimization: The optimize module in SciPy provides functions for optimization, such as finding the minimum or maximum of a function. It includes methods like minimize for general-purpose optimization and specialized algorithms like leastsq for least-squares fitting.
+
+Interpolation: The interpolate module provides functions for interpolation, including methods like interp1d for 1-D interpolation and griddata for multidimensional interpolation.
+
+Linear Algebra: SciPy's linalg module offers a wide range of functions for linear algebra operations, such as solving linear systems (solve), computing eigenvalues and eigenvectors (eig), and matrix decompositions (lu, qr, svd, etc.).
+
+Signal Processing: The signal module in SciPy provides functions for signal processing tasks, such as filtering, Fourier analysis, wavelet transforms, and convolution.
+
+Statistics: SciPy's stats module contains functions for statistical distributions, hypothesis testing, and descriptive statistics. It offers various probability distributions, statistical tests, and summary statistics functions.
+
+Image Processing: The ndimage module in SciPy provides functions for image processing tasks, including filtering, morphological operations, interpolation, and feature extraction.
+
+Sparse Matrices: SciPy includes a sparse module that offers efficient data structures and functions for sparse matrices. It provides methods for sparse matrix operations, such as matrix multiplication, solving linear systems, and eigenvalue computations.
+
+Integration of Ordinary Differential Equations (ODEs): The integrate module in SciPy provides functions to solve ordinary differential equations. It includes methods like odeint for solving initial value problems and ode for a more flexible ODE solver.
+
+Spatial and Distance Calculations: The spatial module in SciPy provides functions for spatial data structures, geometric operations, and distance calculations. It includes functions for nearest neighbor search, Voronoi diagrams, convex hulls, and more.
+===============================================
+
+
+
+--From Documentation
+===============================================
+-----------------------------------------
+Getting help
+-----------------------------------------
+#Scipy is a statistics and some math functions
+===============================================
+print('bounds of distribution lower: %s, upper: %s' % norm.support())
+bounds of distribution lower: -inf, upper: inf
+
+#We can list all methods and properties of the distribution with dir(norm).
+
+rv = norm()
+dir(rv)  # reformatted
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__',
+ '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__',
+ '__init__', '__le__', '__lt__', '__module__', '__ne__', '__new__',
+ '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__',
+ '__str__', '__subclasshook__', '__weakref__', 'a', 'args', 'b', 'cdf',
+ 'dist', 'entropy', 'expect', 'interval', 'isf', 'kwds', 'logcdf',
+ 'logpdf', 'logpmf', 'logsf', 'mean', 'median', 'moment', 'pdf', 'pmf',
+ 'ppf', 'random_state', 'rvs', 'sf', 'stats', 'std', 'var']
+
+===============================================
+-----------------------------------------
+Common methods
+-----------------------------------------
+===============================================
+#rvs: Random Variates
+
+#pdf: Probability Density Function
+
+#cdf: Cumulative Distribution Function
+
+#sf: Survival Function (1-CDF)
+
+#ppf: Percent Point Function (Inverse of CDF)
+
+#isf: Inverse Survival Function (Inverse of SF)
+
+#stats: Return mean, variance, (Fisher’s) skew, or (Fisher’s) kurtosis
+
+#moment: non-central moments of the distribution
+
+#Let’s take a normal RV as an example.
+norm.cdf(0)
+0.5
+
+---
+
+To find the median of a distribution, we can use 
+the percent point function ppf, which is the inverse of the cdf:
+
+norm.ppf(0.5)
+0.0
+
+---
+
+To generate a sequence of random variates, use the size keyword argument:
+
+norm.rvs(size=3)
+array([-0.35687759,  1.34347647, -0.11710531])   # random
+
+---
+
+Don’t think that norm.rvs(5) generates 5 variates:
+norm.rvs(5)
+5.471435163732493  # random
+
+---
+
+
+===============================================
+-----------------------------------------
+Random number generation
+-----------------------------------------
+===============================================
+norm.rvs(size=5, random_state=rng)
+array([ 0.47143516, -1.19097569,  1.43270697, -0.3126519 , -0.72058873])  # random
+
+#size=5 >> 5 random variets numbers.
+
+---
+
+from scipy.stats import expon
+expon.mean(scale=3.)
+3.0
+
+#In the provided code snippet, expon.mean(scale=3.) calculates the mean 
+of the exponential distribution with a scale parameter of 3.0. This means 
+that, on average, the time between events in 
+the exponential distribution with a scale of 3.0 is expected to be 3.0.
+
+---
+
+The uniform function from the scipy.stats module represents a continuous random variable with a uniform distribution. This distribution is defined within a specified interval, where all values within the interval are equally likely.
+
+In the provided code snippet, we import the uniform function from scipy.stats and then use the cdf method to calculate the cumulative distribution function (CDF) for an array of values.
+
+The cdf method calculates the probability that a random variable from the uniform distribution is less than or equal to a given value. It returns an array of probabilities corresponding to the provided values.
+
+Let's break down the code:
+
+python
+Copy
+uniform.cdf([0, 1, 2, 3, 4, 5], loc=1, scale=4)
+Here, we calculate the CDF for the values [0, 1, 2, 3, 4, 5] from the uniform distribution. The loc parameter represents the lower bound of the interval, and the scale parameter determines the width of the interval.
+
+The output of this code is an array of probabilities corresponding to the CDF values for each input value.
+
+Copy
+array([0.  , 0.  , 0.25, 0.5 , 0.75, 1.  ])
+This means that:
+
+The probability of getting a value less than or equal to 0 from the uniform distribution is 0.0.
+The probability of getting a value less than or equal to 1 is also 0.0.
+The probability of getting a value less than or equal to 2 is 0.25.
+The probability of getting a value less than or equal to 3 is 0.5.
+The probability of getting a value less than or equal to 4 is 0.75.
+The probability of getting a value less than or equal to 5 is 1.0.
+In summary, the code calculates the cumulative probabilities for the given values based on the uniform distribution defined by the specified loc and scale parameters.
+
+===============================================
+-----------------------------------------
+15 common scipy.stats functions with examples
+-----------------------------------------
+
+norm: This function represents the normal (Gaussian) distribution. It is commonly used for modeling real-valued random variables.
+
+Example:
+
+python
+Copy
+from scipy.stats import norm
+
+# Generate random samples from a normal distribution
+samples = norm.rvs(loc=0, scale=1, size=1000)
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = norm.pdf(x=0, loc=0, scale=1)
+uniform: This function represents the uniform distribution, where all values within an interval are equally likely.
+
+Example:
+
+python
+Copy
+from scipy.stats import uniform
+
+# Generate random samples from a uniform distribution
+samples = uniform.rvs(loc=0, scale=1, size=1000)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = uniform.cdf(x=0.5, loc=0, scale=1)
+binom: This function represents the binomial distribution, which models the number of successes in a fixed number of independent Bernoulli trials.
+
+Example:
+
+python
+Copy
+from scipy.stats import binom
+
+# Calculate the probability mass function (PMF) at a specific value
+pmf_value = binom.pmf(k=3, n=10, p=0.5)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = binom.cdf(k=3, n=10, p=0.5)
+poisson: This function represents the Poisson distribution, which models the number of events occurring in a fixed interval of time or space.
+
+Example:
+
+python
+Copy
+from scipy.stats import poisson
+
+# Calculate the probability mass function (PMF) at a specific value
+pmf_value = poisson.pmf(k=2, mu=3)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = poisson.cdf(k=2, mu=3)
+expon: This function represents the exponential distribution, which models the time between events in a Poisson process.
+
+Example:
+
+python
+Copy
+from scipy.stats import expon
+
+# Generate random samples from an exponential distribution
+samples = expon.rvs(scale=2, size=1000)
+
+# Calculate the survival function (1 - CDF) at a specific value
+survival_value = expon.sf(x=3, scale=2)
+gamma: This function represents the gamma distribution, which is a generalization of the exponential distribution.
+
+Example:
+
+python
+Copy
+from scipy.stats import gamma
+
+# Generate random samples from a gamma distribution
+samples = gamma.rvs(a=2, scale=3, size=1000)
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = gamma.pdf(x=4, a=2, scale=3)
+beta: This function represents the beta distribution, which is often used for modeling proportions or probabilities.
+
+Example:
+
+python
+Copy
+from scipy.stats import beta
+
+# Generate random samples from a beta distribution
+samples = beta.rvs(a=2, b=5, size=1000)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = beta.cdf(x=0.6, a=2, b=5)
+t: This function represents the Student's t-distribution, which is used for hypothesis testing when the sample size is small and the population variance is unknown.
+
+Example:
+
+python
+Copy
+from scipy.stats import t
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = t.pdf(x=2, df=10)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = t.cdf(x=2, df=10)
+chi2: This function represents the chi-squared distribution, which is commonly used in hypothesis testing and confidence intervals for the variance of a normal distribution.
+
+Example:
+
+python
+Copy
+from scipy.stats import chi2
+
+# Generate random samples from a chi-squared distribution
+samples = chi2.rvs(df=5, size=1000)
+
+# Calculate the survival function (1 - CDF) at a specific value
+survival_value = chi2.sf(x=10, df=5)
+f: This function represents the F-distribution, which isused in hypothesis testing for comparing variances of two populations.
+
+Example:
+
+python
+Copy
+from scipy.stats import f
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = f.pdf(x=2, dfn=5, dfd=10)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = f.cdf(x=2, dfn=5, dfd=10)
+lognorm: This function represents the log-normal distribution, which is commonly used for modeling variables that are the result of exponential growth processes.
+Example:
+
+python
+Copy
+from scipy.stats import lognorm
+
+# Generate random samples from a log-normal distribution
+samples = lognorm.rvs(s=0.8, loc=0, scale=1, size=1000)
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = lognorm.pdf(x=2, s=0.8, loc=0, scale=1)
+weibull: This function represents the Weibull distribution, which is often used to model lifetimes and failure rates.
+Example:
+
+python
+Copy
+from scipy.stats import weibull
+
+# Generate random samples from a Weibull distribution
+samples = weibull.rvs(c=2, loc=0, scale=1, size=1000)
+
+# Calculate the cumulative distribution function (CDF) at a specific value
+cdf_value = weibull.cdf(x=2, c=2, loc=0, scale=1)
+multivariate_normal: This function represents the multivariate normal distribution, which models a random vector of continuous variables.
+Example:
+
+python
+Copy
+from scipy.stats import multivariate_normal
+
+# Generate random samples from a multivariate normal distribution
+mean = [0, 0]
+cov = [[1, 0.5], [0.5, 1]]
+samples = multivariate_normal.rvs(mean=mean, cov=cov, size=1000)
+
+# Calculate the probability density function (PDF) at a specific value
+pdf_value = multivariate_normal.pdf(x=[1, 1], mean=mean, cov=cov)
+ks_2samp: This function performs the Kolmogorov-Smirnov test to compare two datasets.
+Example:
+
+python
+Copy
+from scipy.stats import ks_2samp
+
+# Generate two datasets
+data1 = norm.rvs(loc=0, scale=1, size=100)
+data2 = norm.rvs(loc=0.5, scale=1, size=150)
+
+# Perform the Kolmogorov-Smirnov test
+ks_statistic, p_value = ks_2samp(data1, data2)
+pearsonr: This function computes the Pearson correlation coefficient and p-value to assess the linear relationship between two datasets.
+Example:
+
+python
+Copy
+from scipy.stats import pearsonr
+
+# Generate two datasets
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Compute the Pearson correlation coefficient and p-value
+correlation, p_value = pearsonr(x, y)
+
+-------
+Parameters passed explained
+-------
+norm:
+
+loc (optional, default=0): The mean (or location) of the distribution.
+scale (optional, default=1): The standard deviation (or scale) of the distribution.
+size (optional, default=None): The shape of the generated random samples.
+uniform:
+
+loc (optional, default=0): The lower bound of the interval.
+scale (optional, default=1): The width of the interval.
+size (optional, default=None): The shape of the generated random samples.
+binom:
+
+n: The number of Bernoulli trials.
+p: The probability of success in each trial.
+k: The number of successes (for PMF and CDF calculations).
+poisson:
+
+mu: The average rate (or number of events) in the given interval.
+k: The number of events (for PMF and CDF calculations).
+expon:
+
+scale (optional, default=1): The scale (or mean) of the exponential distribution.
+x: The value at which to evaluate the survival function.
+gamma:
+
+a: The shape parameter of the gamma distribution.
+scale (optional, default=1): The scale (or mean) of the gamma distribution.
+x: The value at which to evaluate the PDF.
+beta:
+
+a: The first shape parameter of the beta distribution.
+b: The second shape parameter of the beta distribution.
+x: The value at which to evaluate the CDF.
+t:
+
+df: The degrees of freedom.
+x: The value at which to evaluate the PDF or CDF.
+chi2:
+
+df: The degrees of freedom.
+x: The value at which to evaluate the survival function.
+f:
+
+dfn: The numerator degrees of freedom.
+dfd: The denominator degrees of freedom.
+x: The value at which to evaluate the PDF or CDF.
+lognorm:
+
+s: The shape parameter of the log-normal distribution.
+loc (optional, default=0): The location parameter of the log-normal distribution.
+scale (optional, default=1): The scale parameter of the log-normal distribution.
+x: The value at which to evaluate the PDF.
+weibull:
+
+c: The shape parameter of the Weibull distribution.
+loc (optional, default=0): The location parameter of the Weibull distribution.
+scale (optional, default=1): The scale parameter of the Weibull distribution.
+x: The value at which to evaluate the CDF.
+multivariate_normal:
+
+mean: The mean vector of the multivariate normal distribution.
+cov: The covariance matrix of the multivariate normal distribution.
+size (optional, default=None): The shape of the generated random samples.
+x: The value at which to evaluate the PDF.
+ks_2samp:
+
+data1: The first dataset for comparison.
+data2: The second dataset for comparison.
+pearsonr:
+
+x: The first dataset for correlation calculation.
+y: The second dataset for correlation calculation.
+
+===============================================
+
+
+
+
+
+===============================================
+
+===============================================
+
+===============================================
+-----------------------------------------
+Scipy Statistics Functions
+-----------------------------------------
+===============================================
+norm(loc, scale) - Normal continuous random variable.
+uniform(loc, scale) - Uniform continuous random variable.
+beta(a, b) - Beta continuous random variable.
+gamma(a, loc, scale) - Gamma continuous random variable.
+expon(scale) - Exponential continuous random variable.
+chi2(df) - Chi-squared continuous random variable.
+t(df) - Student's t continuous random variable.
+f(dfnum, dfden) - F continuous random variable.
+binom(n, p) - Binomial discrete random variable.
+poisson(mu) - Poisson discrete random variable.
+geom(p) - Geometric discrete random variable.
+hypergeom(N, n, m) - Hypergeometric discrete random variable.
+lognorm(s, loc, scale) - Log-normal continuous random variable.
+powerlaw(a, loc, scale) - Power-law continuous random variable.
+gumbel_r(loc, scale) - Right-skewed Gumbel continuous random variable.
+gumbel_l(loc, scale) - Left-skewed Gumbel continuous random variable.
+logistic(loc, scale) - Logistic continuous random variable.
+laplace(loc, scale) - Laplace continuous random variable.
+vonmises(mu, kappa) - Von Mises continuous random variable.
+pareto(a) - Pareto continuous random variable.
+triang(c) - Triangular continuous random variable.
+wald(mean, scale) - Wald (inverse Gaussian) continuous random variable.
+nbinom(n, p) - Negative binomial discrete random variable.
+zipf(a) - Zipf discrete random variable.
+loggamma(c, loc, scale) - Log-gamma continuous random variable.
+loglaplace(c, loc, scale) - Log-Laplace continuous random variable.
+invgamma(a, loc, scale) - Inverse gamma continuous random variable.
+levy(loc, scale) - Levy continuous random variable.
+levy_stable(alpha, beta, loc, scale) - Levy-stable continuous random variable.
+truncnorm(a, b, loc, scale) - Truncated normal continuous random variable.
+semicircular(loc, scale) - Semicircular continuous random variable.
+trianglexy(c, locx, scalex, locy, scaley) - Bivariate triangular continuous random variable.
+ksone(n) - Kolmogorov-Smirnov one-sided test.
+kstwobign() - Kolmogorov-Smirnov two-sided test for large samples.
+binom_test(x, n, p) - Binomial test.
+ttest_1samp(a, popmean) - One-sample t-test.
+ttest_ind(a, b) - Independent samples t-test.
+ttest_rel(a, b) - Paired samples t-test.
+chisquare(f_obs, f_exp) - Chi-squared test of independence.
+chi2_contingency(observed) - Chi-squared test of independence for a contingency table.
+f_oneway(*args) - One-way ANOVA.
+kruskal(*args) - Kruskal-Wallis H-test.
+mannwhitneyu(x, y) - Mann-Whitney U test.
+wilcoxon(x, y) - Wilcoxon signed-rank test.
+bartlett(*args) - Bartlett's test for equal variances.
+levene(*args) - Levene's test for equal variances.
+anderson(x, dist) - Anderson-Darling test for a given distribution.
+shapiro(x) - Shapiro-Wilk test for normality.
+pearsonr(x, y) - Pearson correlation coefficient and p-value.
+spearmanr(x, y) - Spearman rank-order correlation coefficient and p-value.
