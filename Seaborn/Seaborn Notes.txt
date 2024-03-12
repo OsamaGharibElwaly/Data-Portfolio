@@ -1,0 +1,119 @@
+===========================================================
+------------------------------------------------
+Seaborn Library
+https://seaborn.pydata.org/tutorial/introduction.html
+
+#Some Notes is my notes.
+#Some examples is my examples.
+#Will be added to in the future.
+------------------------------------------------
+===========================================================
+
+================================
+----------------------------
+Introduction
+----------------------------
+================================
+#Seaborn is a library for making statistical grahpics in python.
+#It builds on top of matplotlib and integrates closely with pandas data structures.
+#To use it you must import it first.
+
+# Import seaborn
+import seaborn as sns
+
+# Apply the default theme
+sns.set_theme()
+
+# Load an example dataset
+tips = sns.load_dataset("tips")
+
+# Create a visualization
+sns.relplot(
+    data=tips,
+    x="total_bill", y="tip", col="time",
+    hue="smoker", style="smoker", size="size",
+)
+
+#In the visualization you pass these parameters
+-data >> for the data used to plot.
+-x >> x axis coordinates.
+-y >> y axis coordinates.
+-hue >> color used for specific column or some data inside the table tips.
+-size >> to differentiate the size of points.
+-style >> to determine the specific column style.
+-col >> to specify that the graph is splitted into columns.
+===============================================
+===============================================
+
+================================
+----------------------------
+Statistical estimation
+----------------------------
+================================
+#Often, we are interested in the average value of one
+ variable as a function of other variables. Many seaborn
+ functions will automatically perform the
+ statistical estimation that is necessary to answer these questions:
+
+fmri = sns.load_dataset("fmri")
+sns.relplot(
+    data=fmri, kind="line",
+    x="timepoint", y="signal", col="region",
+    hue="event", style="event",
+)
+
+===============================================
+===============================================
+
+================================
+----------------------------
+Distributional representations
+----------------------------
+================================
+#Statistical analyses require knowledge about the distribution of variables 
+in your dataset. The seaborn function displot() supports several approaches 
+to visualizing distributions. These include classic techniques like histograms and 
+computationally-intensive approaches like kernel density estimation:
+
+sns.displot(data=tips, x="total_bill", col="time", kde=True)
+
+sns.displot(data=tips, kind="ecdf", x="total_bill", col="time", hue="smoker", rug=True)
+
+===============================================
+===============================================
+
+================================
+----------------------------
+Plots for categorical data
+----------------------------
+================================
+#catplot >> category plot.
+sns.catplot(data=tips, kind="swarm", x="day", y="total_bill", hue="smoker")
+
+#kind >> used for determining the type of graph.
+
+---
+
+sns.catplot(data=tips, kind="violin", x="day", y="total_bill", hue="smoker", split=True)
+
+kind = "violin" >> shown in figure introduction_23 in the folder.
+
+---
+
+penguins = sns.load_dataset("penguins")
+sns.jointplot(data=penguins, x="flipper_length_mm", y="bill_length_mm", hue="species")
+
+jointplot >> shown in figure introduction_27 in the folder.
+
+---
+
+sns.pairplot(data=penguins, hue="species")
+
+pairplot >> shown in figure introduction_29 in the folder.
+summary: it is a collection of graphs.
+
+
+===============================================
+===============================================
+
+
