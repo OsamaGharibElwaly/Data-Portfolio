@@ -1,0 +1,17 @@
+# Conclusion
+
+ The world tends to be more eco-system car usage . Electricity cars are the most ones that uses fuel as electricity.
+
+ 'Year': The plot for 'year' shows a clear upward trend, indicating that as the years increase, there is a corresponding increase in the other variables.
+
+'Engine Cylinders': The scatter plot for 'engine_cylinders' does not show a clear trend. However, it appears that there is a concentration of data points around certain values, which might indicate that certain engine cylinder sizes are more common.
+
+'Engine Displacement': The plot for 'engine_displacement' shows a positive correlation, indicating that as the engine displacement increases, other variables also tend to increase.
+
+'City MPG': The scatter plot for 'city_mpg_ft1' shows a negative correlation, suggesting that as the city miles per gallon increase, other variables tend to decrease.
+
+'Highway MPG': Similar to the 'city_mpg_ft1' plot, the 'highway_mpg_ft1' plot also shows a negative correlation. This implies that as the highway miles per gallon increase, other variables tend to decrease as well.
+
+'Combined MPG': The scatter plot for 'combined_mpg_ft1' is similar to the 'city_mpg_ft1' and 'highway_mpg_ft1' plots, indicating a negative correlation. As the combined miles per gallon increase, other variables tend to decrease.
+
+It seems that cars with automatic 4-speed are the greatest ones
