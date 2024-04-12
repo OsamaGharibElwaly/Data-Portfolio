@@ -1,0 +1,25 @@
+This is my first project.
+----
+
+#There are 388 person .
+
+#The youngest person that eats this food is 18 years old and the oldest is 33 years old(data is taken from a restaurant that highly visited by adults usually).
+
+#longitude and latitude for each person is closely near to each other ,so they came from their homes to the restaurant which reflects that the restaurant provides good offers and good food.
+
+#most of people liked the food are uneducated.
+#Post graduate (almost married) are the least category eating in the restaurant.
+
+# Conclusion :
+
+#There are 388 person .
+
+#The youngest person that eats this food is 18 years old and the oldest is 33 years old(data is taken from a restaurant that highly visited by adults usually).
+
+#longitude and latitude for each person is closely near to each other ,so they came from their homes to the restaurant which reflects that the restaurant provides good offers and good food.
+
+#most of people liked the food are uneducated.
+#Post graduate (almost married) are the least category eating in the restaurant.
+
+# In the end and the most imortant #
+- Restaurant has great popularity and doing great
