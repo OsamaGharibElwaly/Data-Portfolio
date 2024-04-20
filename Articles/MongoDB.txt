@@ -1,0 +1,46 @@
+Today's topic is one of the most widely used databases, which is as significant as relational databases: MongoDB, a non-SQL database.
+
+NoSQL DBMS:
+A versatile non-relational database known for its:
+
+Features:
+NoSQL
+Flexibility
+Ease of learning
+Availability
+Performance
+Ecosystem
+Real-time data processing
+Developer-friendly
+JSON-like
+Here's an explanation of each feature:
+
+NoSQL:
+MongoDB is a non-relational database primarily based on documents.
+Flexibility:
+This database is characterized by its adaptability, especially when modifying data compared to relational databases.
+Ease of Learning:
+Learning MongoDB is straightforward and can be grasped within a few days without encountering major difficulties.
+Availability:
+MongoDB also boasts high availability and permissiveness, supporting numerous mechanisms used in query languages.
+Performance:
+MongoDB is specifically designed for high efficiency, with significant enhancements in storage, input/output usage, and efficient query commands.
+Ecosystem:
+The collaborative and vast community contributes to enhancing MongoDB's efficiency, making it a viable option.
+Real-Time Data Processing:
+MongoDB allows for instant and rapid interaction with data, query languages, commands, and data retrieval.
+Developer-Friendly:
+This database aims for simplicity and ease with developers, avoiding complexity.
+JSON-Like:
+It also uses BSON (Binary JSON), which employs JavaScript Object Notation and one of its objects.
+MongoDB stores data in a large container known as "Collection," with each having numerous "Documents" containing key-value pairs resembling "Fields" in the form of columns or fields. Each field holds a specific value.
+
+One of the learning pillars in the backend is MongoDB, the document-oriented database.
+
+I hope you find this article enjoyable.
+
+
+
+
+
+
