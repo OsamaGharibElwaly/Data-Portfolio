@@ -1,0 +1,69 @@
+In previous discussions, we've touched on the concept of "databases," exploring various methods and technologies used in some of them, highlighting their differences from other database technologies. Today, we delve into what I believe is a somewhat novel concept compared to those previously discussed. However, it's an important concept that, once grasped by the reader, illuminates intelligent pathways, shedding light on some of the dark corners of the mind. These are intelligent methods and techniques that experts and scholars have spent days, months, and even years developing to arrive at solutions for stubborn problems and optimizations within what's known as databases.
+
+This brings us to the topic at hand, focusing on techniques used in databases aimed at improving performance, speed, efficiency, and storage size reduction when storing data.
+
+Compression
+A widely used term in data handling and computer databases, compression refers to reducing the size of data, which could otherwise affect the efficiency of a database or personal device. Our lives are filled with vast amounts of data that can slow down computers and databases significantly, impacting their efficiency. Employing compression methods with data involves another concept we'll discuss now.
+
+Encoding
+Computers transform data from a readable format to numerical values, compressing and converting them from a human-readable format to a machine-friendly, unreadable format. The computer or database then compresses and encodes the data until it's needed, at which point we perform decoding or what's also known as "Decoding."
+
+To accomplish all this, it was essential to establish scientifically agreed-upon methods in the scientific community to facilitate these processes.
+
+Algorithms
+These methods, also known as algorithms or systematic sets of steps, aim to solve specific problems. We frequently encounter algorithms in the world of computers and software. I recommend "Grokking Algorithms" as a beginner's guide to learning algorithms.
+
+Now, let's return to our discussion. Today, after that lengthy introduction that was necessary to delve into today's topic, let's explore some of the techniques or algorithms used in databases, specifically focusing on the columns of database tables, including the following:
+
+Run-length Encoding
+This method of encoding or compressing data focuses on:
+
+The stored value
+The stored value's location
+The number of stored values
+For example, if we have a column titled "Gender" with values arranged as follows:
+M | M | M | F | M | F | M | M
+
+We can condense this as follows:
+(Value, Count, Location)
+(M, 0, 3)
+(F, 3, 1)
+(M, 4, 1)
+(F, 5, 1)
+(M, 6, 2)
+
+This compresses 8 values into 5 values, representing a compression technique.
+
+Bit Packing Encoding
+This encoding method relies on having surplus storage space and many unused numbers. For example:
+int32
+0000 0000 0000 0000 0000 0000 0000 0000 0010 => 2
+0000 0000 0000 0000 0000 0000 0000 0000 0100 => 4
+
+In this example, only the first 4 bits are used, compressing the data significantly. Using a different data type like int8 further reduces space usage.
+
+Bitmap Encoding
+In this technique, columns of data, especially Boolean ones with zeros and ones, can be represented more efficiently using bits. This is much more space-efficient compared to the previous storage method.
+
+Note: Sorting is preferred as it gives the aforementioned compression techniques an advantage in space-saving.
+
+Delta Encoding
+For sequences like time columns in tables:
+Time: 12:00 | 12:01 | 12:02 | 12:03 | 12:04
+
+The improvement can be seen by encoding it as:
+Time: 12:00 | +1 | +1 | +1 | +1
+
+Incremental Encoding
+Commonly used in sorted textual formats, it emphasizes the importance of sorting data beforehand.
+
+Dictionary Encoding
+This is a significant encoding method that assigns numbers to each value in a column without needing prior sorting.
+
+I hope you find this article enjoyable and informative.
+
+
+
+
+
+
