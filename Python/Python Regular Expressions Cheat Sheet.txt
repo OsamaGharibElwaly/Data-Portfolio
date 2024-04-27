@@ -1,0 +1,78 @@
+My notebook on Kaggle:
+https://www.kaggle.com/code/osamaahmedmohamed/python-regex
+
+Basics:
+Literal Characters: Match exact characters (e.g., abc matches "abc").
+Special Characters: . ^ $ * + ? { } [ ] \ | ( ): Have special meanings in regex.
+
+
+Quantifiers:
+*: Matches 0 or more occurrences.
++: Matches 1 or more occurrences.
+?: Matches 0 or 1 occurrence.
+{n}: Matches exactly n occurrences.
+{n,}: Matches n or more occurrences.
+{n,m}: Matches between n and m occurrences.
+
+
+Anchors:
+^: Matches the start of a string.
+$: Matches the end of a string.
+
+
+Character Classes:
+[]: Matches any single character in the brackets.
+[a-z]: Matches lowercase letters.
+[A-Z]: Matches uppercase letters.
+[0-9]: Matches digits.
+[^]: Matches any single character not in the brackets.
+
+
+Shorthand Character Classes:
+\d: Matches digits (equivalent to [0-9]).
+\D: Matches non-digits.
+\w: Matches word characters (letters, digits, underscore).
+\W: Matches non-word characters.
+\s: Matches whitespace characters (space, tab, newline).
+\S: Matches non-whitespace characters.
+
+
+Alternation:
+|: Matches either the pattern before or after the pipe.
+(foo|bar): Matches "foo" or "bar".
+Groups and Capturing:
+(): Groups patterns together and captures matched text.
+(abc): Matches "abc" and captures it.
+\number: Backreference to a captured group.
+\1: Matches the same text as the first captured group.
+
+
+Escaping:
+\: Escapes special characters to match them literally.
+\., \$, etc.: Matches a literal dot, dollar sign, etc.
+Quantifier Modifiers:
+?: Makes a quantifier lazy (matches the minimum possible).
+*?, +?: Lazy versions of * and +.
+
+
+Flags:
+re.IGNORECASE or re.I: Ignores case in matching.
+re.MULTILINE or re.M: Allows ^ and $ to match start/end of lines.
+re.DOTALL or re.S: Makes . match any character including newline.
+Methods for Pattern Matching:
+re.match(pattern, string): Matches pattern at the beginning of the string.
+re.search(pattern, string): Searches for pattern anywhere in the string.
+re.findall(pattern, string): Finds all occurrences of pattern in the string.
+re.finditer(pattern, string): Returns an iterator of matched objects.
+
+
+Example Usage:
+
+import re
+
+# Matching a word in a string
+pattern = r'\bhello\b'
+text = "Say hello to the world!"
+result = re.search(pattern, text)
+if result:
+    print("Match found:", result.group())

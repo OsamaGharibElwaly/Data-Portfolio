@@ -1,0 +1,194 @@
+My notebook on Kaggle :
+https://www.kaggle.com/code/osamaahmedmohamed/python-syntax-cheat-sheet
+
+### Python Syntax Cheat Sheet
+
+#### 1. **Variables and Data Types**
+```python
+# Variables
+x = 10
+name = "Alice"
+is_valid = True
+
+# Data Types
+int_val = 10
+float_val = 3.14
+str_val = "Hello, World!"
+bool_val = True
+```
+
+#### 2. **Basic Input/Output**
+```python
+# Input
+name = input("Enter your name: ")
+
+# Output
+print("Hello,", name)
+```
+
+#### 3. **Control Structures**
+```python
+# if-else statement
+if condition:
+    # code block if condition is True
+else:
+    # code block if condition is False
+
+# elif ladder
+if condition1:
+    # code block
+elif condition2:
+    # code block
+else:
+    # code block
+```
+
+#### 4. **Loops**
+```python
+# for loop
+for item in iterable:
+    # code block
+
+# while loop
+while condition:
+    # code block
+```
+
+#### 5. **Functions**
+```python
+# Function definition
+def greet(name):
+    return "Hello, " + name
+
+# Function call
+result = greet("Alice")
+print(result)
+```
+
+#### 6. **Lists**
+```python
+# List creation
+my_list = [1, 2, 3, 4]
+
+# Accessing elements
+print(my_list[0])  # Output: 1
+
+# Slicing
+sub_list = my_list[1:3]  # Output: [2, 3]
+
+# List comprehension
+squared = [x**2 for x in my_list]
+```
+
+#### 7. **Tuples**
+```python
+# Tuple creation
+my_tuple = (1, 2, 3)
+
+# Unpacking
+a, b, c = my_tuple
+
+# Immutable
+# my_tuple[0] = 10  # Error: Tuples are immutable
+```
+
+#### 8. **Dictionaries**
+```python
+# Dictionary creation
+my_dict = {'name': 'Alice', 'age': 30}
+
+# Accessing values
+print(my_dict['name'])  # Output: Alice
+
+# Adding new key-value pair
+my_dict['city'] = 'New York'
+
+# Dictionary comprehension
+squared_dict = {key: value**2 for key, value in my_dict.items()}
+```
+
+#### 9. **Sets**
+```python
+# Set creation
+my_set = {1, 2, 3, 4}
+
+# Adding elements
+my_set.add(5)
+
+# Set operations
+union_set = my_set.union(other_set)
+intersection_set = my_set.intersection(other_set)
+```
+
+#### 10. **Exceptions Handling**
+```python
+# try-except block
+try:
+    # code that may raise an exception
+except ExceptionType as e:
+    # handle the exception
+```
+
+#### 11. **File Handling**
+```python
+# Open and read file
+with open('file.txt', 'r') as file:
+    data = file.read()
+
+# Writing to file
+with open('file.txt', 'w') as file:
+    file.write('Hello, World!')
+```
+
+#### 12. **Classes and Objects**
+```python
+# Class definition
+class MyClass:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        return "Hello, " + self.name
+
+# Object instantiation
+obj = MyClass("Alice")
+print(obj.greet())
+```
+
+#### 13. **Modules and Packages**
+```python
+# Importing modules
+import module_name
+
+# Importing specific items
+from module_name import function_name
+
+# Importing with alias
+import module_name as alias_name
+
+# Importing from packages
+from package_name import module_name
+```
+
+#### 14. **Virtual Environments**
+```python
+# Creating virtual environment
+# Run: python -m venv myenv
+
+# Activating virtual environment
+# On Windows: .\myenv\Scripts\activate
+# On macOS/Linux: source myenv/bin/activate
+
+# Deactivating virtual environment
+# Run: deactivate
+```
+
+#### 15. **Additional Tips**
+- Use `__name__ == "__main__":` for executable scripts.
+- Utilize list comprehensions and generator expressions for concise code.
+- Understand the difference between mutable (lists, dictionaries) and immutable (tuples, strings) objects.
+- Explore built-in functions and standard libraries for common tasks (e.g., `os`, `math`, `datetime`).
+
+---
+
+This cheat sheet covers a wide range of Python syntax and essential concepts for writing Python code efficiently and effectively. Keep exploring and practicing to deepen your understanding and proficiency!
