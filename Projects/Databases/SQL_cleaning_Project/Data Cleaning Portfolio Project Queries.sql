@@ -1,7 +1,7 @@
 /*
 
 Cleaning Data in SQL Queries
-
+Project Video :https://youtu.be/nAHCZyOL41k
 */
 
 
